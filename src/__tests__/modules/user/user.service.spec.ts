@@ -1,11 +1,14 @@
+import { AccountService } from 'src/modules/account/account.service';
 import { User } from 'src/modules/user/entity/user.entity';
 import { UserService } from 'src/modules/user/user.service';
+import { accountMock } from 'src/__tests__/mocks/account';
 import { userMock } from 'src/__tests__/mocks/user';
 import { createMock } from 'ts-auto-mock';
 import { DeleteResult, Repository } from 'typeorm';
 
 describe('userService', () => {
     let userService: UserService;
+    let accountService: AccountService;
 
     beforeAll(() => {
         const userRepository = createMock<Repository<User>>({
@@ -16,7 +19,11 @@ describe('userService', () => {
             delete: jest.fn().mockResolvedValue(DeleteResult),
         });
 
-        userService = new UserService(userRepository);
+        accountService = createMock<AccountService>({
+            save: jest.fn().mockResolvedValue(accountMock),
+        });
+
+        userService = new UserService(userRepository, accountService);
     });
 
     test('if userService is defined', () => {
