@@ -6,4 +6,4 @@ export const userMock = {
     firstName: 'test',
     lastName: 'test',
     document: '123.456.789-00',
-} as unknown as User;
+} as User;
