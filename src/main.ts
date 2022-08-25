@@ -7,7 +7,7 @@ const bootstrap = async () => {
     dotenv.config();
     dataProvider.initialize();
     const app = await NestFactory.create(AppModule);
-    await app.listen(3000);
+    await app.listen(process.env.APPLICATION_PORT);
 };
 
 bootstrap();
