@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { QueryFailedError, Repository } from 'typeorm';
 import { AccountService } from '../account/account.service';
+import { Account } from '../account/entity/account.entity';
 import { IAccount } from '../account/types/account.interface';
 import { User } from './entity/user.entity';
 import { IUser } from './types/user.interface';
@@ -15,16 +16,21 @@ export class UserService {
     ) {}
 
     public async save(user: IUser): Promise<User> {
-        const userRegistred = await this.userRepository.save(user);
+        try {
+            const userRegistred = await this.userRepository.save(user);
 
-        const account = {
-            balance: 0.0,
-            accountType: 'checking account',
-            userId: userRegistred,
-        } as IAccount;
-        await this.accountService.save(account);
+            const account = new Account();
 
-        return userRegistred;
+            account.balance = 0.0;
+            account.accountType = 'checking account';
+            account.userId = userRegistred;
+
+            await this.accountService.save(account);
+
+            return userRegistred;
+        } catch (err) {
+            throw new BadRequestException(err);
+        }
     }
 
     public index(): Promise<User[]> {
