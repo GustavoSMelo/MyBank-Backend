@@ -3,12 +3,11 @@ import {
     Column,
     Entity,
     JoinColumn,
-    JoinTable,
     OneToOne,
     PrimaryGeneratedColumn,
 } from 'typeorm';
 
-@Entity({ schema: 'account' })
+@Entity()
 export class Account {
     @PrimaryGeneratedColumn()
     id: number;
@@ -20,6 +19,6 @@ export class Account {
     accountType: string;
 
     @OneToOne(() => User, (user) => user.id, { cascade: true })
-    @JoinColumn()
+    @JoinColumn({ name: 'userId' })
     userId: User;
 }
