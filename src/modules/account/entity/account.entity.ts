@@ -18,6 +18,18 @@ export class Account {
     @Column()
     accountType: string;
 
+    @Column()
+    agency: number;
+
+    @Column()
+    accountNumber: number;
+
+    @Column()
+    password: string;
+
+    @Column()
+    fullPassword: string;
+
     @OneToOne(() => User, (user) => user.id, { cascade: true })
     @JoinColumn({ name: 'userId' })
     userId: User;
