@@ -4,5 +4,9 @@ export interface IAccount {
     id?: number;
     accountType: string;
     balance: number;
+    agency: number;
+    accountNumber: number;
+    password: string;
+    fullPassword: string;
     userId: User;
 }
