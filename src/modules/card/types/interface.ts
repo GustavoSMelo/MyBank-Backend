@@ -7,4 +7,5 @@ export interface ICard {
     securityCode: number;
     digitValidator: number;
     accountId: Account;
+    cardNumber: number;
 }
