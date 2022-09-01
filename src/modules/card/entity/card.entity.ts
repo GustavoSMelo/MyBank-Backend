@@ -24,6 +24,9 @@ export class Card {
     @Column()
     digitValidator: number;
 
+    @Column()
+    cardNumber: number;
+
     @OneToOne(() => Account, (account) => account.id, { cascade: true })
     @JoinColumn({ name: 'accountId' })
     accountId: Account;
