@@ -15,7 +15,7 @@ export class GenerateService {
         return Number(numbers);
     }
 
-    public flags() {
+    public flags(): string {
         const number = Math.round(Math.random() * 2).toString();
 
         return this.flagsArray()[number];
