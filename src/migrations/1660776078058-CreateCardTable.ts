@@ -28,11 +28,6 @@ export class CreateCardTable1660776078058 implements MigrationInterface {
                         isNullable: false,
                     },
                     {
-                        name: 'issuer',
-                        type: 'int',
-                        isNullable: false,
-                    },
-                    {
                         name: 'securityCode',
                         type: 'int',
                         isNullable: false,
