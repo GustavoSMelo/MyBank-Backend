@@ -12,8 +12,8 @@ export class AccountService {
     public constructor(
         @InjectRepository(Account)
         private readonly accountRepository: Repository<Account>,
-        private readonly generateService: GenerateService,
         private readonly cardService: CardService,
+        private readonly generateService: GenerateService,
     ) {}
 
     public async save(account: IAccount): Promise<Account> {
