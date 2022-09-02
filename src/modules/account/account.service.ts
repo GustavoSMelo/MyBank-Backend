@@ -1,6 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository } from 'typeorm';
+import { CardService } from '../card/card.service';
+import { ICard } from '../card/types/interface';
+import { GenerateService } from '../utils/services/generate.service';
 import { Account } from './entity/account.entity';
 import { IAccount } from './types/account.interface';
 
@@ -9,10 +12,29 @@ export class AccountService {
     public constructor(
         @InjectRepository(Account)
         private readonly accountRepository: Repository<Account>,
+        private readonly generateService: GenerateService,
+        private readonly cardService: CardService,
     ) {}
 
-    public save(account: IAccount): Promise<Account> {
-        return this.accountRepository.save(account);
+    public async save(account: IAccount): Promise<Account> {
+        const accountRegistred = await this.accountRepository.save(account);
+
+        const newCard = {
+            accountId: accountRegistred.id,
+            digitValidator: Number(this.generateService.numbersRandomly(1)),
+            flag: this.generateService.flags(),
+            validThru: new Date(new Date().getFullYear() + 5),
+            securityCode: Number(this.generateService.numbersRandomly(3)),
+        } as unknown as ICard;
+
+        newCard.cardNumber = this.generateService.cardNumber(
+            newCard,
+            account.accountNumber,
+        );
+
+        this.cardService.save(newCard);
+
+        return accountRegistred;
     }
 
     public show(id: number): Promise<Account> {
