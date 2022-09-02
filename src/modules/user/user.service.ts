@@ -7,7 +7,7 @@ import { User } from './entity/user.entity';
 import { IUser } from './types/user.interface';
 import * as bcrypt from 'bcrypt';
 import { EAccount } from 'src/modules/account/types/account.enum';
-import { Generate } from 'src/utils/generate';
+import { GenerateService } from '../utils/services/generate.service';
 
 @Injectable()
 export class UserService {
@@ -15,7 +15,7 @@ export class UserService {
         @InjectRepository(User)
         private readonly userRepository: Repository<User>,
         private readonly accountService: AccountService,
-        private readonly generate: Generate,
+        private readonly generateService: GenerateService,
     ) {}
 
     public async save(
@@ -37,7 +37,7 @@ export class UserService {
                 salts,
             );
             account.agency = EAccount.accountAgency;
-            account.accountNumber = this.generate.numbersRandomly();
+            account.accountNumber = this.generateService.numbersRandomly();
             account.userId = userRegistred;
 
             await this.accountService.save(account);
