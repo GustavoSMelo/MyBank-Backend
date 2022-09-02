@@ -2,7 +2,9 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AccountModule } from './modules/account/account.module';
+import { CardModule } from './modules/card/card.module';
 import { UserModule } from './modules/user/user.module';
+import { UtilsModule } from './modules/utils/utils.module';
 
 @Module({
     imports: [
@@ -18,8 +20,10 @@ import { UserModule } from './modules/user/user.module';
             entities: ['dist/**/*.entity.js'],
             migrations: ['dist/migrations/*.js'],
         }),
+        UtilsModule,
         UserModule,
         AccountModule,
+        CardModule,
     ],
 })
 export class AppModule {}
