@@ -56,6 +56,10 @@ export class UserService {
         return this.userRepository.findOne({ where: { id } });
     }
 
+    public showByDocument(document: string): Promise<User> {
+        return this.userRepository.findOne({ where: { document } });
+    }
+
     public async update(id: number, user: IUser): Promise<User> {
         const userRegistred = await this.show(id);
 
