@@ -4,7 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AccountModule } from './modules/account/account.module';
 import { CardModule } from './modules/card/card.module';
-import { LoginModule } from './modules/login/login.module';
+import { AuthModule } from './modules/auth/auth.module';
 import { UserModule } from './modules/user/user.module';
 import { UtilsModule } from './modules/utils/utils.module';
 
@@ -26,7 +26,7 @@ import { UtilsModule } from './modules/utils/utils.module';
         UserModule,
         AccountModule,
         CardModule,
-        LoginModule,
+        AuthModule,
     ],
     controllers: [AppController],
 })
