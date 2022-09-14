@@ -37,3 +37,4 @@ lerna-debug.log*
 # Project
 .docker/
 .env
+list.todo
