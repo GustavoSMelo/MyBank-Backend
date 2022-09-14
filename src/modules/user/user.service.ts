@@ -52,8 +52,17 @@ export class UserService {
         return this.userRepository.find();
     }
 
-    public show(id: number): Promise<User> {
-        return this.userRepository.findOne({ where: { id } });
+    public async show(
+        id: number,
+    ): Promise<{ userInfo: User; accountInfo: Account }> {
+        const userInfo = await this.userRepository.findOne({ where: { id } });
+        const accountInfo = await this.accountService.showAccountByUser(
+            userInfo,
+        );
+        delete accountInfo.password;
+        delete accountInfo.fullPassword;
+
+        return { userInfo, accountInfo };
     }
 
     public showByDocument(document: string): Promise<User> {
@@ -61,16 +70,16 @@ export class UserService {
     }
 
     public async update(id: number, user: IUser): Promise<User> {
-        const userRegistred = await this.show(id);
+        const { userInfo } = await this.show(id);
 
-        userRegistred.email = user.email;
-        userRegistred.firstName = user.firstName;
-        userRegistred.lastName = user.lastName;
-        userRegistred.document = user.document;
+        userInfo.email = user.email;
+        userInfo.firstName = user.firstName;
+        userInfo.lastName = user.lastName;
+        userInfo.document = user.document;
 
-        await this.userRepository.update(id, userRegistred);
+        await this.userRepository.update(id, userInfo);
 
-        return userRegistred;
+        return userInfo;
     }
 
     public destroy(id: number) {
