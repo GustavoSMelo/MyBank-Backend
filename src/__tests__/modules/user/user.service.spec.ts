@@ -29,6 +29,7 @@ describe('userService', () => {
 
         accountService = createMock<AccountService>({
             save: jest.fn().mockResolvedValue(accountMock),
+            showAccountByUser: jest.fn().mockResolvedValue(accountMock),
         });
 
         generateService = createMock<GenerateService>({
@@ -53,10 +54,6 @@ describe('userService', () => {
         expect(await userService.index()).toStrictEqual([userMock]);
     });
 
-    test('method findOne is returning User', async () => {
-        expect(await userService.show(userMock.id)).toBe(userMock);
-    });
-
     test('method save is returning User', async () => {
         expect(
             await userService.save(
@@ -73,5 +70,21 @@ describe('userService', () => {
 
     test('method update is returning User', async () => {
         expect(await userService.update(userMock.id, userMock)).toBe(userMock);
+    });
+
+    test('method showByDocument should return a user passing a document in parameter', async () => {
+        expect(await userService.showByDocument(userMock.document)).toBe(
+            userMock,
+        );
+    });
+
+    test('method findOne is returning User', async () => {
+        delete accountMock.password;
+        delete accountMock.fullPassword;
+
+        expect(await userService.show(userMock.id)).toStrictEqual({
+            userInfo: userMock,
+            accountInfo: accountMock,
+        });
     });
 });
