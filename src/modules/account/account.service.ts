@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository } from 'typeorm';
 import { CardService } from '../card/card.service';
 import { ICard } from '../card/types/interface';
+import { User } from '../user/entity/user.entity';
 import { GenerateService } from '../utils/services/generate.service';
 import { Account } from './entity/account.entity';
 import { IAccount } from './types/account.interface';
@@ -39,6 +40,10 @@ export class AccountService {
 
     public show(id: number): Promise<Account> {
         return this.accountRepository.findOne({ where: { id } });
+    }
+
+    public showAccountByUser(userId: User): Promise<Account> {
+        return this.accountRepository.findOne({ where: { userId } });
     }
 
     public destroy(id: number): Promise<DeleteResult> {

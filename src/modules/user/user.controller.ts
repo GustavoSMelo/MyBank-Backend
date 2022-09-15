@@ -1,4 +1,14 @@
-import { Body, Controller, Get, Headers, Post } from '@nestjs/common';
+import {
+    Body,
+    Controller,
+    Get,
+    Headers,
+    Param,
+    Post,
+    UnauthorizedException,
+    UseGuards,
+} from '@nestjs/common';
+import { JWTGuards } from '../auth/guards/jwt.guards';
 import { IUser } from './types/user.interface';
 import { UserService } from './user.service';
 
@@ -16,7 +26,16 @@ export class UserController {
     }
 
     @Get()
+    @UseGuards(JWTGuards)
     public index() {
         return this.userService.index();
+    }
+
+    @Get(':id')
+    @UseGuards(JWTGuards)
+    public show(@Param('id') id: number, @Headers('userid') userid: number) {
+        if (userid !== id) throw new UnauthorizedException('Unauthorized');
+
+        return this.userService.show(id);
     }
 }
