@@ -12,6 +12,7 @@ import {
     flagsArray,
     numbersRandomly,
 } from 'src/__tests__/mocks/generate';
+import { userMock } from 'src/__tests__/mocks/user';
 
 describe('accountService', () => {
     let accountService: AccountService;
@@ -56,6 +57,12 @@ describe('accountService', () => {
 
     test('Show account method', async () => {
         expect(await accountService.show(accountMock.id)).toBe(accountMock);
+    });
+
+    test('show method should return a account passing a user in parameter', async () => {
+        expect(await accountService.showAccountByUser(userMock)).toBe(
+            accountMock,
+        );
     });
 
     test('Update account method', async () => {
