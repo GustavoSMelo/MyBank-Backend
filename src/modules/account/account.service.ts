@@ -42,7 +42,7 @@ export class AccountService {
         return this.accountRepository.findOne({ where: { id } });
     }
 
-    public showAccountByUser(userId: User) {
+    public showAccountByUser(userId: User): Promise<Account> {
         return this.accountRepository.findOne({ where: { userId } });
     }
 
