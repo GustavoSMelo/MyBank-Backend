@@ -6,7 +6,11 @@ import { AuthService } from './auth.service';
 import { JWTGuards } from './guards/jwt.guards';
 
 @Module({
-    imports: [AccountModule, JWTGuards, forwardRef(() => UserModule)],
+    imports: [
+        forwardRef(() => AccountModule),
+        JWTGuards,
+        forwardRef(() => UserModule),
+    ],
     controllers: [AuthController],
     providers: [AuthService],
     exports: [JWTGuards],
