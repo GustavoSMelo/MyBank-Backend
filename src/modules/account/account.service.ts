@@ -1,9 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository } from 'typeorm';
 import { CardService } from '../card/card.service';
 import { ICard } from '../card/types/interface';
 import { User } from '../user/entity/user.entity';
+import { UserService } from '../user/user.service';
 import { GenerateService } from '../utils/services/generate.service';
 import { Account } from './entity/account.entity';
 import { IAccount } from './types/account.interface';
@@ -15,6 +16,8 @@ export class AccountService {
         private readonly accountRepository: Repository<Account>,
         private readonly cardService: CardService,
         private readonly generateService: GenerateService,
+        @Inject(forwardRef(() => UserService))
+        private readonly userService: UserService,
     ) {}
 
     public async save(account: IAccount): Promise<Account> {
@@ -59,5 +62,25 @@ export class AccountService {
         await this.accountRepository.save(account);
 
         return accountRegistred;
+    }
+
+    public showByAgencyAndAccountNumber(
+        agency: number,
+        accountNumber: number,
+    ): Promise<Account> {
+        return this.accountRepository.findOne({
+            where: {
+                accountNumber,
+                agency,
+            },
+        });
+    }
+
+    public async showByDocument(document: string): Promise<Account> {
+        const { userInfo: user } = await this.userService.showByDocument(
+            document,
+        );
+
+        return this.showAccountByUser(user);
     }
 }
