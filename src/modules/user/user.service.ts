@@ -1,19 +1,25 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+    BadRequestException,
+    forwardRef,
+    Inject,
+    Injectable,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { AccountService } from '../account/account.service';
-import { Account } from '../account/entity/account.entity';
+import { AccountService } from 'src/modules/account/account.service';
+import { Account } from 'src/modules/account/entity/account.entity';
 import { User } from './entity/user.entity';
 import { IUser } from './types/user.interface';
 import * as bcrypt from 'bcrypt';
 import { EAccount } from 'src/modules/account/types/account.enum';
-import { GenerateService } from '../utils/services/generate.service';
+import { GenerateService } from 'src/modules/utils/services/generate.service';
 
 @Injectable()
 export class UserService {
     public constructor(
         @InjectRepository(User)
         private readonly userRepository: Repository<User>,
+        @Inject(forwardRef(() => AccountService))
         private readonly accountService: AccountService,
         private readonly generateService: GenerateService,
     ) {}
@@ -59,14 +65,27 @@ export class UserService {
         const accountInfo = await this.accountService.showAccountByUser(
             userInfo,
         );
+
         delete accountInfo.password;
         delete accountInfo.fullPassword;
 
         return { userInfo, accountInfo };
     }
 
-    public showByDocument(document: string): Promise<User> {
-        return this.userRepository.findOne({ where: { document } });
+    public async showByDocument(
+        document: string,
+    ): Promise<{ userInfo: User; accountInfo: Account }> {
+        const userInfo = await this.userRepository.findOne({
+            where: { document },
+        });
+        const accountInfo = await this.accountService.showAccountByUser(
+            userInfo,
+        );
+
+        delete accountInfo.password;
+        delete accountInfo.fullPassword;
+
+        return { userInfo, accountInfo };
     }
 
     public async update(id: number, user: IUser): Promise<User> {
