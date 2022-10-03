@@ -1,4 +1,5 @@
 import {
+    forwardRef,
     HttpException,
     Inject,
     Injectable,
@@ -11,15 +12,15 @@ import { UserService } from '../user/user.service';
 @Injectable()
 export class TransactionService {
     public constructor(
-        @Inject()
+        @Inject(forwardRef(() => AccountService))
         private readonly accountService: AccountService,
-        @Inject()
+        @Inject(forwardRef(() => UserService))
         private readonly userService: UserService,
     ) {}
 
-    public async transfer(
+    public async transferByDocument(
         idHost: number,
-        idReceiver: number,
+        receiverDocument: string,
         quantity: number,
     ): Promise<void> {
         try {
@@ -34,7 +35,7 @@ export class TransactionService {
                 );
             }
 
-            helper = await this.userService.show(idReceiver);
+            helper = await this.userService.showByDocument(receiverDocument);
             const receiver = await this.accountService.showAccountByUser(
                 helper.userInfo,
             );
@@ -50,9 +51,84 @@ export class TransactionService {
         }
     }
 
-    public async deposit(id: number, quantity: number): Promise<Account> {
+    public async transferByAccount(
+        idHost: number,
+        receiverAccountNumber: number,
+        receiverAgency: number,
+        quantity: number,
+    ): Promise<void> {
+        try {
+            const { accountInfo: account } = await this.userService.show(
+                idHost,
+            );
+            const accountReceiver =
+                await this.accountService.showByAgencyAndAccountNumber(
+                    receiverAgency,
+                    receiverAccountNumber,
+                );
+
+            if (account.balance < quantity)
+                throw new UnauthorizedException(
+                    'You not have credits to transfer for your account',
+                );
+
+            account.balance -= quantity;
+            accountReceiver.balance += quantity;
+        } catch (err) {
+            console.error(err);
+            throw new HttpException(
+                `[Service: Transaction | Method: deposit] -> ${err}`,
+                400,
+            );
+        }
+    }
+
+    public async depositById(id: number, quantity: number): Promise<Account> {
         try {
             const account = await this.accountService.show(id);
+
+            account.balance += quantity;
+
+            return account;
+        } catch (err) {
+            console.error(err);
+            throw new HttpException(
+                `[Service: Transaction | Method: deposit] -> ${err}`,
+                400,
+            );
+        }
+    }
+
+    public async depositByDocument(
+        document: string,
+        quantity: number,
+    ): Promise<Account> {
+        try {
+            const account = await this.accountService.showByDocument(document);
+
+            account.balance += quantity;
+
+            return account;
+        } catch (err) {
+            console.error(err);
+            throw new HttpException(
+                `[Service: Transaction | Method: deposit] -> ${err}`,
+                400,
+            );
+        }
+    }
+
+    public async depositByAccountAndAgency(
+        accountNumber: number,
+        agency: number,
+        quantity: number,
+    ): Promise<Account> {
+        try {
+            const account =
+                await this.accountService.showByAgencyAndAccountNumber(
+                    agency,
+                    accountNumber,
+                );
 
             account.balance += quantity;
 
