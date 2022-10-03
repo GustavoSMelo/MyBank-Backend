@@ -11,7 +11,9 @@ export class AuthService {
         private readonly accountService: AccountService,
     ) {}
     public async login(document: string, password: number) {
-        const user = await this.userService.showByDocument(document);
+        const { userInfo: user } = await this.userService.showByDocument(
+            document,
+        );
         const account = await this.accountService.showAccountByUser(user);
 
         if (await bcrypt.compare(password.toString(), account.fullPassword)) {
