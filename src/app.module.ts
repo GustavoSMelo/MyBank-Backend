@@ -7,6 +7,7 @@ import { CardModule } from './modules/card/card.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { UserModule } from './modules/user/user.module';
 import { UtilsModule } from './modules/utils/utils.module';
+import { TransactionModule } from './modules/transaction/transaction.module';
 
 @Module({
     imports: [
@@ -27,6 +28,7 @@ import { UtilsModule } from './modules/utils/utils.module';
         AccountModule,
         CardModule,
         AuthModule,
+        TransactionModule,
     ],
     controllers: [AppController],
 })
