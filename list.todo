@@ -1,4 +1,5 @@
-When create account, create a card too, using a algorithm to create a card number
 Refactor the tests
+Create credit Module
+Create tests for credit module
 Add fastfy in nest
 Add swagger

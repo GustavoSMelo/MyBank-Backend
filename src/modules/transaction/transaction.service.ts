@@ -83,9 +83,14 @@ export class TransactionService {
         }
     }
 
-    public async depositById(id: number, quantity: number): Promise<Account> {
+    public async depositByAccountId(
+        id: number,
+        quantity: number,
+    ): Promise<Account> {
         try {
             const account = await this.accountService.show(id);
+
+            console.log(account);
 
             account.balance += quantity;
 

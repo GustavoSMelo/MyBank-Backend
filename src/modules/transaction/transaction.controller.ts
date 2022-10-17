@@ -45,7 +45,7 @@ export class TransactionController {
         @Param('id') id: number,
         @Body('quantity') quantity: number,
     ) {
-        return this.transactionService.depositById(id, quantity);
+        return this.transactionService.depositByAccountId(id, quantity);
     }
 
     @Post('deposit/document')
