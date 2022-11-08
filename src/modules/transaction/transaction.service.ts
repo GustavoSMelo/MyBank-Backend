@@ -42,6 +42,9 @@ export class TransactionService {
 
             host.balance -= quantity;
             receiver.balance += quantity;
+
+            await this.accountService.update(host.id, host);
+            await this.accountService.update(receiver.id, receiver);
         } catch (err) {
             console.error(err);
             throw new HttpException(
@@ -74,6 +77,12 @@ export class TransactionService {
 
             account.balance -= quantity;
             accountReceiver.balance += quantity;
+
+            await this.accountService.update(account.id, account);
+            await this.accountService.update(
+                accountReceiver.id,
+                accountReceiver,
+            );
         } catch (err) {
             console.error(err);
             throw new HttpException(
@@ -90,15 +99,18 @@ export class TransactionService {
         try {
             const account = await this.accountService.show(id);
 
-            console.log(account);
+            let balance = Number(account.balance);
+            balance += quantity;
 
-            account.balance += quantity;
+            account.balance = balance;
+
+            await this.accountService.update(id, account);
 
             return account;
         } catch (err) {
             console.error(err);
             throw new HttpException(
-                `[Service: Transaction | Method: deposit] -> ${err}`,
+                `[Service: Transaction | Method: depositByAccountId] -> ${err}`,
                 400,
             );
         }
@@ -113,11 +125,13 @@ export class TransactionService {
 
             account.balance += quantity;
 
+            await this.accountService.update(account.id, account);
+
             return account;
         } catch (err) {
             console.error(err);
             throw new HttpException(
-                `[Service: Transaction | Method: deposit] -> ${err}`,
+                `[Service: Transaction | Method: depositByDocument] -> ${err}`,
                 400,
             );
         }
@@ -137,11 +151,13 @@ export class TransactionService {
 
             account.balance += quantity;
 
+            await this.accountService.update(account.id, account);
+
             return account;
         } catch (err) {
             console.error(err);
             throw new HttpException(
-                `[Service: Transaction | Method: deposit] -> ${err}`,
+                `[Service: Transaction | Method: depositByAccountAndAgency] -> ${err}`,
                 400,
             );
         }

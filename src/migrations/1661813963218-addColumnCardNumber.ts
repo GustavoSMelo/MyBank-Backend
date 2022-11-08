@@ -7,7 +7,7 @@ export class addColumnCardNumber1661813963218 implements MigrationInterface {
             new TableColumn({
                 name: 'cardNumber',
                 type: 'varchar',
-                isNullable: false,
+                isNullable: true,
             }),
         );
     }

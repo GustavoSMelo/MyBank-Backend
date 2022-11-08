@@ -39,15 +39,6 @@ export class TransactionController {
         );
     }
 
-    @Post('deposit/:id')
-    @UseGuards(JWTGuards)
-    public depositById(
-        @Param('id') id: number,
-        @Body('quantity') quantity: number,
-    ) {
-        return this.transactionService.depositByAccountId(id, quantity);
-    }
-
     @Post('deposit/document')
     @UseGuards(JWTGuards)
     public depositByDocument(
@@ -57,7 +48,7 @@ export class TransactionController {
         return this.transactionService.depositByDocument(document, quantity);
     }
 
-    @Post('deposit/document')
+    @Post('deposit/account/agency')
     @UseGuards(JWTGuards)
     public depositByAccountAndAgency(
         @Body() body: IBodyTransactionAccountDeposit,
@@ -68,5 +59,14 @@ export class TransactionController {
             agency,
             quantity,
         );
+    }
+
+    @Post('deposit/:id')
+    @UseGuards(JWTGuards)
+    public depositById(
+        @Param('id') id: number,
+        @Body('quantity') quantity: number,
+    ) {
+        return this.transactionService.depositByAccountId(id, quantity);
     }
 }

@@ -14,6 +14,6 @@ export class User {
     @Column()
     email: string;
 
-    @Column()
+    @Column({ type: 'real' })
     document: string;
 }
